@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4">Tickets registrados</h2>
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    {% for categoria, mensaje in mensajes %}
+      <div class="alert alert-{{ categoria }} alert-dismissible fade show auto-dismiss" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+<form method="get" class="mb-3">
+  <label for="prioridad">Filtrar por prioridad:</label>
+  <select name="prioridad" id="prioridad" class="form-select w-auto d-inline-block mx-2">
+    <option value="">-- Todas --</option>
+    <option value="alta" {% if filtro == 'alta' %}selected{% endif %}>Alta</option>
+    <option value="media" {% if filtro == 'media' %}selected{% endif %}>Media</option>
+    <option value="baja" {% if filtro == 'baja' %}selected{% endif %}>Baja</option>
+  </select>
+  <label for="estado">Filtrar por estado:</label>
+  <select name="estado" id="estado" class="form-select w-auto d-inline-block mx-2"> 
+      <option value="">--Todos--</option>
+      <option value="abierta" {% if filtro == 'abierta' %}selected{% endif %}>Abierta</option>
+      <option value="cerrada" {% if filtro == 'cerrada' %}selected{% endif %}>Cerrada</option>
+  </select>
+  <button type="submit" class="btn btn-primary">Aplicar filtro</button>
+</form>
+
+<div class="mb-3">
+  {% for prioridad, cantidad in conteo.items() %}
+    <span class="badge bg-info me-2">{{ prioridad.capitalize() }}: {{ cantidad }}</span>
+  {% endfor %}
+</div>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Prioridad</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for fila in data %}
+    <tr>
+      <td>{{ fila.nombre }}</td>
+      <td>{{ fila.prioridad }}</td>
+      <td>{{ fila.estado }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
